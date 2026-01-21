@@ -1,8 +1,8 @@
 import { redirect, RouteObject } from 'react-router-dom';
-import Login from '@/pages/auth/Login';
-import Register from '@/pages/auth/Register';
-import ForgotPassword from '@/pages/auth/ForgotPassword';
-import ResetPassword from '@/pages/auth/ResetPassword';
+import LoginPage from '@/pages/auth/LoginPage';
+import RegisterPage from '@/pages/auth/RegisterPage';
+import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from '@/pages/auth/ResetPasswordPage';
 import { store } from '@/store'; // Direct store access for loaders
 // Helper to redirect if already logged in
 const publicLoader = () => {
@@ -14,22 +14,22 @@ const publicLoader = () => {
 export const publicRoutes: RouteObject[] = [
     {
         path: '/login',
-        element: <Login />,
+        element: <LoginPage />,
         loader: publicLoader,
     },
     {
         path: '/register',
-        element: <Register />,
+        element: <RegisterPage />,
         loader: publicLoader,
     },
     {
         path: '/forgot-password',
-        element: <ForgotPassword />,
+        element: <ForgotPasswordPage />,
         loader: publicLoader,
     },
     {
         path: '/reset-password',
-        element: <ResetPassword />,
+        element: <ResetPasswordPage />,
         loader: publicLoader,
     },
 ];

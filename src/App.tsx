@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Login from '@/pages/auth/Login';
-import Register from '@/pages/auth/Register';
-import UserDashboard from '@/pages/dashboard/UserDashboard';
-import AdminDashboard from '@/pages/dashboard/AdminDashboard';
-import QuizList from '@/pages/quiz/QuizList';
-import QuizDetail from '@/pages/quiz/QuizDetail';
-import TakeQuiz from '@/pages/attempt/TakeQuiz';
-import QuizResult from '@/pages/attempt/QuizResult';
-import MyResults from '@/pages/results/MyResults';
-import Leaderboard from '@/pages/leaderboard/Leaderboard';
+import Login from '@/pages/auth/LoginPage';
+import Register from '@/pages/auth/RegisterPage';
+import UserDashboard from '@/pages/dashboard/UserDashboardPage';
+import AdminDashboard from '@/pages/dashboard/AdminDashboardPage';
+import QuizList from '@/pages/quiz/QuizListPage';
+import QuizDetail from '@/pages/quiz/QuizDetailPage';
+import TakeQuiz from '@/pages/attempt/TakeQuizPage';
+import QuizResult from '@/pages/attempt/QuizResultPage';
+import MyResults from '@/pages/results/MyResultsPage';
+import Leaderboard from '@/pages/leaderboard/LeaderboardPage';
 
-import CreateQuiz from '@/pages/admin/CreateQuiz';
+import CreateQuiz from '@/pages/admin/CreateQuizPage';
 import { useAppSelector } from './store/hooks';
 
 function App() {

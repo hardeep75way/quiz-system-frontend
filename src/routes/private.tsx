@@ -1,14 +1,14 @@
 import { redirect, RouteObject } from 'react-router-dom';
-import UserDashboard from '@/pages/dashboard/UserDashboard';
-import AdminDashboard from '@/pages/dashboard/AdminDashboard';
-import QuizList from '@/pages/quiz/QuizList';
-import QuizDetail from '@/pages/quiz/QuizDetail';
-import CreateQuiz from '@/pages/admin/CreateQuiz';
-import TakeQuiz from '@/pages/attempt/TakeQuiz';
-import QuizResult from '@/pages/attempt/QuizResult';
-import MyResults from '@/pages/results/MyResults';
-import Leaderboard from '@/pages/leaderboard/Leaderboard';
-import ChangePassword from '@/pages/auth/ChangePassword';
+import UserDashboard from '@/pages/dashboard/UserDashboardPage';
+import AdminDashboard from '@/pages/dashboard/AdminDashboardPage';
+import QuizList from '@/pages/quiz/QuizListPage';
+import QuizDetail from '@/pages/quiz/QuizDetailPage';
+import CreateQuiz from '@/pages/admin/CreateQuizPage';
+import TakeQuiz from '@/pages/attempt/TakeQuizPage';
+import QuizResult from '@/pages/attempt/QuizResultPage';
+import MyResults from '@/pages/results/MyResultsPage';
+import Leaderboard from '@/pages/leaderboard/LeaderboardPage';
+import ChangePasswordPage from '@/pages/auth/ChangePasswordPage';
 import { store } from '@/store';
 import { quizzesApi } from '@/api/quizzes';
 
@@ -118,7 +118,7 @@ export const privateRoutes: RouteObject[] = [
     // Password Management
     {
         path: '/change-password',
-        element: <ChangePassword />,
+        element: <ChangePasswordPage />,
         loader: protectedLoader,
     },
 ];
