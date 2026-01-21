@@ -9,43 +9,29 @@ import QuizResult from '@/pages/attempt/QuizResultPage';
 import MyResults from '@/pages/results/MyResultsPage';
 import Leaderboard from '@/pages/leaderboard/LeaderboardPage';
 import ChangePasswordPage from '@/pages/auth/ChangePasswordPage';
-import { store } from '@/store';
 import { quizzesApi } from '@/api/quizzes';
+import { isAuthenticated, isAdmin } from '@/lib/auth-guards';
 
-// Protected Loader
-const protectedLoader = () => {
-    if (!store.getState().auth.isAuthenticated) {
+// Protected Loader - now handles token refresh automatically
+const protectedLoader = async () => {
+    const authenticated = await isAuthenticated();
+    if (!authenticated) {
         return redirect('/login');
     }
     return null;
 };
 
-// Admin-only loader
-const adminLoader = () => {
-    const state = store.getState().auth;
-    if (!state.isAuthenticated) {
-        return redirect('/login');
-    }
-
-    // On refresh, user might not be in Redux yet, check localStorage
-    let userRole = state.user?.role;
-
-    if (!userRole) {
-        // Try to get user from localStorage as fallback
-        const userStr = localStorage.getItem('user');
-        if (userStr) {
-            try {
-                const user = JSON.parse(userStr);
-                userRole = user.role;
-            } catch (e) {
-                // If parsing fails, redirect to login
-                return redirect('/login');
-            }
+// Admin-only loader - now handles token refresh automatically
+const adminLoader = async () => {
+    const admin = await isAdmin();
+    if (!admin) {
+        // Check if they're at least authenticated (but not admin)
+        const authenticated = await isAuthenticated();
+        if (!authenticated) {
+            return redirect('/login');
         }
-    }
-
-    if (userRole !== 'admin') {
-        return redirect('/dashboard'); // Redirect non-admins to dashboard
+        // Authenticated but not admin
+        return redirect('/dashboard');
     }
     return null;
 };
@@ -63,7 +49,7 @@ export const privateRoutes: RouteObject[] = [
         path: '/quizzes',
         element: <QuizList />,
         loader: async () => {
-            const authCheck = protectedLoader();
+            const authCheck = await protectedLoader();
             if (authCheck) return authCheck;
             return await quizzesApi.getAll();
         },
