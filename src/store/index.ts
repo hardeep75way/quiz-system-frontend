@@ -1,9 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from './slices/authSlice';
 // Preload state from localStorage
+const getUserFromStorage = () => {
+    try {
+        const userStr = localStorage.getItem('user');
+        return userStr ? JSON.parse(userStr) : null;
+    } catch {
+        return null;
+    }
+};
+
 const preloadedState = {
     auth: {
-        user: null, // Will be fetched after token validation
+        user: getUserFromStorage(), // Load user from localStorage
         accessToken: localStorage.getItem('accessToken'),
         refreshToken: localStorage.getItem('refreshToken'),
         isAuthenticated: !!localStorage.getItem('accessToken'),

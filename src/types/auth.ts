@@ -7,6 +7,21 @@ export interface User {
   created_at: string;
 }
 
+// Password Management Types
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  password: string;
+}
+
+export interface ChangePasswordRequest {
+  current_password: string;
+  new_password: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -29,4 +44,4 @@ export interface LoginResponse extends AuthTokens {
   // Backend returns tokens directly, we'll fetch user separately
 }
 
-export interface UserResponse extends User {}
+export interface UserResponse extends User { }

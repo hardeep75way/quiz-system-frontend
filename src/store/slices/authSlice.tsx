@@ -28,6 +28,8 @@ const authSlice = createSlice({
             state.accessToken = accessToken;
             state.refreshToken = refreshToken;
             state.isAuthenticated = true;
+            // Store user in localStorage for admin role check on refresh
+            localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
         },
@@ -36,6 +38,7 @@ const authSlice = createSlice({
             state.accessToken = null;
             state.refreshToken = null;
             state.isAuthenticated = false;
+            localStorage.removeItem('user');
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
         }

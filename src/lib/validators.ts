@@ -45,3 +45,37 @@ export type LoginFormData = yup.InferType<typeof loginSchema>;
 export type RegisterFormData = yup.InferType<typeof registerSchema>;
 export type QuestionFormData = yup.InferType<typeof questionSchema>;
 export type QuizFormData = yup.InferType<typeof quizSchema>;
+
+// Password Management Schemas
+export const forgotPasswordSchema = yup.object({
+    email: yup.string().email('Invalid email address').required('Email is required'),
+});
+
+export const resetPasswordSchema = yup.object({
+    password: yup.string()
+        .min(8, 'Password must be at least 8 characters')
+        .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+        .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+        .matches(/[0-9]/, 'Password must contain at least one number')
+        .required('Password is required'),
+    confirmPassword: yup.string()
+        .oneOf([yup.ref('password')], 'Passwords must match')
+        .required('Please confirm your password'),
+});
+
+export const changePasswordSchema = yup.object({
+    currentPassword: yup.string().required('Current password is required'),
+    newPassword: yup.string()
+        .min(8, 'Password must be at least 8 characters')
+        .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+        .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+        .matches(/[0-9]/, 'Password must contain at least one number')
+        .required('New password is required'),
+    confirmPassword: yup.string()
+        .oneOf([yup.ref('newPassword')], 'Passwords must match')
+        .required('Please confirm your password'),
+});
+
+export type ForgotPasswordFormData = yup.InferType<typeof forgotPasswordSchema>;
+export type ResetPasswordFormData = yup.InferType<typeof resetPasswordSchema>;
+export type ChangePasswordFormData = yup.InferType<typeof changePasswordSchema>;
