@@ -11,6 +11,7 @@ import Leaderboard from '@/pages/leaderboard/LeaderboardPage';
 import ChangePasswordPage from '@/pages/auth/ChangePasswordPage';
 import { quizzesApi } from '@/api/quizzes';
 import { isAuthenticated, isAdmin } from '@/lib/auth-guards';
+import { UploadPage } from '@/pages/upload/UploadPage';
 
 // Protected Loader - now handles token refresh automatically
 const protectedLoader = async () => {
@@ -98,6 +99,13 @@ export const privateRoutes: RouteObject[] = [
     {
         path: '/admin/quizzes',
         element: <CreateQuiz />,
+        loader: adminLoader,
+    },
+
+    // Admin Routes (continued)
+    {
+        path: '/admin/upload',
+        element: <UploadPage />,
         loader: adminLoader,
     },
 

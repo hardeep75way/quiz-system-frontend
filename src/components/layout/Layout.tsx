@@ -18,12 +18,13 @@ import {
 } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import QuizIcon from '@mui/icons-material/Quiz';
+import UploadIcon from '@mui/icons-material/Upload';
 import HistoryIcon from '@mui/icons-material/History';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
-import { UploadButton, UploadProgressPanel } from '@/features/uploads/components';
+import { UploadProgressPanel } from '@/features/uploads/components';
 
 const drawerWidth = 240;
 
@@ -45,6 +46,7 @@ export default function Layout() {
         ? [
             { path: '/admin/dashboard', label: 'Dashboard', icon: DashboardIcon },
             { path: '/admin/quizzes', label: 'Quizzes', icon: QuizIcon },
+            { path: '/admin/upload', label: 'Upload', icon: UploadIcon },
         ]
         : [
             { path: '/dashboard', label: 'Dashboard', icon: DashboardIcon },
@@ -85,14 +87,6 @@ export default function Layout() {
                     );
                 })}
 
-                {/* Upload Button for Admin */}
-                {isAdmin && (
-                    <ListItem disablePadding>
-                        <ListItemButton sx={{ justifyContent: 'center', py: 2 }}>
-                            <UploadButton />
-                        </ListItemButton>
-                    </ListItem>
-                )}
             </List>
         </div>
     );

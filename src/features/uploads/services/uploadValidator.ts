@@ -1,6 +1,9 @@
 import * as yup from 'yup';
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+const MAX_FILE_SIZE_DOCUMENTS = 100 * 1024 * 1024; // 100MB for documents
+const MAX_FILE_SIZE_IMAGES = 50 * 1024 * 1024;      // 50MB for images
+const MAX_FILE_SIZE_VIDEOS = 500 * 1024 * 1024;     // 500MB for videos
+
 const ALLOWED_FILE_TYPES = [
   'application/pdf',
   'application/msword',
@@ -11,6 +14,12 @@ const ALLOWED_FILE_TYPES = [
   'image/png',
   'image/gif',
   'image/webp',
+  'video/mp4',
+  'video/avi',
+  'video/quicktime',  // .mov files
+  'video/x-msvideo',  // .avi files
+  'video/webm',
+  'video/ogg',
   'text/plain',
   'text/csv',
 ];
@@ -19,9 +28,22 @@ export const uploadFileSchema = yup.object({
   file: yup
     .mixed()
     .required('File is required')
-    .test('fileSize', 'File size must be less than 100MB', (value) => {
+    .test('fileSize', 'File size exceeds allowed limit', (value) => {
       if (!value) return false;
-      return (value as File).size <= MAX_FILE_SIZE;
+      const file = value as File;
+      const mimeType = file.type;
+
+      // Determine max size based on file type
+      let maxSize: number;
+      if (mimeType.startsWith('video/')) {
+        maxSize = MAX_FILE_SIZE_VIDEOS;
+      } else if (mimeType.startsWith('image/')) {
+        maxSize = MAX_FILE_SIZE_IMAGES;
+      } else {
+        maxSize = MAX_FILE_SIZE_DOCUMENTS;
+      }
+
+      return file.size <= maxSize;
     })
     .test('fileType', 'File type is not supported', (value) => {
       if (!value) return false;
@@ -56,6 +78,7 @@ export const formatFileSize = (bytes: number): string => {
 
 export const getFileIcon = (mimeType: string): string => {
   if (mimeType.startsWith('image/')) return '🖼️';
+  if (mimeType.startsWith('video/')) return '🎥';
   if (mimeType.includes('pdf')) return '📄';
   if (mimeType.includes('word')) return '📝';
   if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📊';
