@@ -23,6 +23,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
+import { UploadButton, UploadProgressPanel } from '@/features/uploads/components';
 
 const drawerWidth = 240;
 
@@ -83,6 +84,15 @@ export default function Layout() {
                         </ListItem>
                     );
                 })}
+
+                {/* Upload Button for Admin */}
+                {isAdmin && (
+                    <ListItem disablePadding>
+                        <ListItemButton sx={{ justifyContent: 'center', py: 2 }}>
+                            <UploadButton />
+                        </ListItemButton>
+                    </ListItem>
+                )}
             </List>
         </div>
     );
@@ -160,6 +170,9 @@ export default function Layout() {
                 <Toolbar /> {/* Spacer for fixed AppBar */}
                 <Outlet />
             </Box>
+
+            {/* Global Upload Progress Panel */}
+            <UploadProgressPanel />
         </Box>
     );
 }

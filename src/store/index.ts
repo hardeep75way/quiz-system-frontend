@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from './slices/authSlice';
+import uploadReducer from './slices/uploadSlice';
 // Preload state from localStorage
 const getUserFromStorage = () => {
     try {
@@ -21,8 +22,18 @@ const preloadedState = {
 export const store = configureStore({
     reducer: {
         auth: authReducer,
+        upload: uploadReducer,
     },
     preloadedState, // ← ADD THIS
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                // Ignore these action types for serializability check
+                // because File and AbortController objects are handled outside Redux
+                ignoredActions: ['upload/addUpload'],
+                ignoredPaths: ['upload.uploads.*.file', 'upload.uploads.*.abortController'],
+            },
+        }),
 });
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
