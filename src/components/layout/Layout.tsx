@@ -22,15 +22,12 @@ import HistoryIcon from '@mui/icons-material/History';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState, ReactNode } from 'react';
+import { useState } from 'react';
 
 const drawerWidth = 240;
 
-interface LayoutProps {
-    children?: ReactNode; // Optional for backward compatibility
-}
 
-export default function Layout({ children }: LayoutProps = {}) {
+export default function Layout() {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -161,7 +158,7 @@ export default function Layout({ children }: LayoutProps = {}) {
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, minHeight: '100vh', bgcolor: 'background.default' }}
             >
                 <Toolbar /> {/* Spacer for fixed AppBar */}
-                {children || <Outlet />}
+                <Outlet />
             </Box>
         </Box>
     );

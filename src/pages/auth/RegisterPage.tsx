@@ -24,14 +24,11 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { authApi } from '@/api/auth';
 import { registerSchema, type RegisterFormData } from '@/lib/validators';
-import { useAppDispatch } from '@/store/hooks';
-import { setCredentials } from '@/store/slices/authSlice';
 import { AxiosError } from 'axios';
 import AuthBrandPanel from '@/components/auth/AuthBrandPanel';
 
 export default function RegisterPage() {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const [showPassword, setShowPassword] = useState(false);
 
@@ -61,21 +58,7 @@ export default function RegisterPage() {
 
     const registerMutation = useMutation({
         mutationFn: (data: RegisterFormData) => authApi.register(data.email, data.username, data.password),
-        onSuccess: async (tokenData) => {
-            // Save tokens to localStorage FIRST so API client can use them
-            localStorage.setItem('accessToken', tokenData.access_token);
-            localStorage.setItem('refreshToken', tokenData.refresh_token);
-
-            // Now fetch user data with the token in place
-            const userResponse = await authApi.getCurrentUser();
-
-            // Update Redux state
-            dispatch(setCredentials({
-                user: userResponse,
-                accessToken: tokenData.access_token,
-                refreshToken: tokenData.refresh_token,
-            }));
-
+        onSuccess: async () => {
             enqueueSnackbar('Account created successfully!', { variant: 'success' });
             navigate('/dashboard');
         },

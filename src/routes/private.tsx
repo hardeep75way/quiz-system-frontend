@@ -96,7 +96,7 @@ export const privateRoutes: RouteObject[] = [
         loader: adminLoader,
     },
     {
-        path: '/admin/quizzes/create',
+        path: '/admin/quizzes',
         element: <CreateQuiz />,
         loader: adminLoader,
     },

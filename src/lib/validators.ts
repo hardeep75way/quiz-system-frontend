@@ -1,12 +1,12 @@
 import * as yup from 'yup';
 
 export const loginSchema = yup.object({
-    email: yup.string().email('Invalid Email Address').required('Email is required'),
+    email: yup.string().email('Invalid Email Address').required('Email is required').transform((value) => value?.trim().toLowerCase()),
     password: yup.string().required('Passowrd is required'),
 });
 
 export const registerSchema = yup.object({
-    email: yup.string().email('Invalid email address').required('Email is required'),
+    email: yup.string().email('Invalid email address').required('Email is required').transform((value) => value?.trim().toLowerCase()),
     username: yup
         .string()
         .min(3, 'Username must be at least 3 characters')
