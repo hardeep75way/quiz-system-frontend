@@ -27,87 +27,45 @@ export const UploadItem: React.FC<UploadItemProps> = ({ upload }) => {
     dispatch(removeUpload(upload.id));
   };
 
-  const getStatusChip = () => {
-    switch (upload.status) {
-      case UploadStatus.UPLOADING:
-        return (
-          <Chip
-            label="Uploading"
-            size="small"
-            color="primary"
-            sx={{ fontWeight: 600 }}
-          />
-        );
-      case UploadStatus.COMPLETED:
-        return (
-          <Chip
-            icon={<CheckCircleIcon />}
-            label="Completed"
-            size="small"
-            color="success"
-            sx={{ fontWeight: 600 }}
-          />
-        );
-      case UploadStatus.FAILED:
-        return (
-          <Chip
-            icon={<ErrorIcon />}
-            label="Failed"
-            size="small"
-            color="error"
-            sx={{ fontWeight: 600 }}
-          />
-        );
-      case UploadStatus.CANCELLED:
-        return (
-          <Chip
-            label="Cancelled"
-            size="small"
-            color="warning"
-            sx={{ fontWeight: 600 }}
-          />
-        );
-      default:
-        return (
-          <Chip
-            icon={<AccessTimeIcon />}
-            label="Pending"
-            size="small"
-            sx={{ fontWeight: 600 }}
-          />
-        );
-    }
-  };
+  const statusConfig = {
+    [UploadStatus.PENDING]: {
+      chipLabel: 'Pending',
+      chipColor: 'default' as const,
+      chipIcon: <AccessTimeIcon />,
+      borderColor: 'divider',
+      backgroundColor: 'background.paper',
+    },
+    [UploadStatus.UPLOADING]: {
+      chipLabel: 'Uploading',
+      chipColor: 'primary' as const,
+      chipIcon: undefined,
+      borderColor: 'primary.main',
+      backgroundColor: 'primary.50',
+    },
+    [UploadStatus.COMPLETED]: {
+      chipLabel: 'Completed',
+      chipColor: 'success' as const,
+      chipIcon: <CheckCircleIcon />,
+      borderColor: 'success.main',
+      backgroundColor: 'success.50',
+    },
+    [UploadStatus.FAILED]: {
+      chipLabel: 'Failed',
+      chipColor: 'error' as const,
+      chipIcon: <ErrorIcon />,
+      borderColor: 'error.main',
+      backgroundColor: 'error.50',
+    },
+    [UploadStatus.CANCELLED]: {
+      chipLabel: 'Cancelled',
+      chipColor: 'warning' as const,
+      chipIcon: undefined,
+      borderColor: 'warning.main',
+      backgroundColor: 'warning.50',
+    },
+  } as const;
 
-  const getBorderColor = () => {
-    switch (upload.status) {
-      case UploadStatus.UPLOADING:
-        return 'primary.main';
-      case UploadStatus.COMPLETED:
-        return 'success.main';
-      case UploadStatus.FAILED:
-        return 'error.main';
-      case UploadStatus.CANCELLED:
-        return 'warning.main';
-      default:
-        return 'divider';
-    }
-  };
-
-  const getBackgroundColor = () => {
-    switch (upload.status) {
-      case UploadStatus.UPLOADING:
-        return 'primary.50';
-      case UploadStatus.COMPLETED:
-        return 'success.50';
-      case UploadStatus.FAILED:
-        return 'error.50';
-      case UploadStatus.CANCELLED:
-        return 'warning.50';
-      default:
-        return 'background.paper';
-    }
-  };
+  const currentConfig = statusConfig[upload.status];
 
   return (
     <Paper
@@ -120,8 +78,8 @@ export const UploadItem: React.FC<UploadItemProps> = ({ upload }) => {
         mb: 1.5,
         borderRadius: 2,
         border: 2,
-        borderColor: getBorderColor(),
-        bgcolor: getBackgroundColor(),
+        borderColor: currentConfig.borderColor,
+        bgcolor: currentConfig.backgroundColor,
         transition: 'all 0.3s ease',
         '&:hover': {
           elevation: 4,
@@ -170,7 +128,13 @@ export const UploadItem: React.FC<UploadItemProps> = ({ upload }) => {
           <Typography variant="caption" color="text.secondary" fontWeight={500}>
             {formatFileSize(upload.fileSize)}
           </Typography>
-          {getStatusChip()}
+          <Chip
+            icon={currentConfig.chipIcon}
+            label={currentConfig.chipLabel}
+            size="small"
+            color={currentConfig.chipColor}
+            sx={{ fontWeight: 600 }}
+          />
         </Box>
 
         {/* Progress Bar */}

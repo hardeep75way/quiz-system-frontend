@@ -18,15 +18,14 @@ export const useUpload = () => {
 
   const startUpload = useCallback(
     async (file: File) => {
-      // Generate unique ID for this upload
+
       const uploadId = uuidv4();
 
-      // Validate file before upload
+
       const validation = await validateUploadFile(file);
       if (!validation.valid) {
         console.error('File validation failed:', validation.errors);
 
-        // Add failed upload to store
         const failedUpload: SerializableUploadFile = {
           id: uploadId,
           filename: file.name,
@@ -43,11 +42,9 @@ export const useUpload = () => {
         return;
       }
 
-      // Create abort controller for this upload
       const abortController = new AbortController();
       abortControllersRef.current.set(uploadId, abortController);
 
-      // Create initial upload state
       const initialUpload: SerializableUploadFile = {
         id: uploadId,
         filename: file.name,
@@ -59,16 +56,13 @@ export const useUpload = () => {
         totalBytes: file.size,
       };
 
-      // Add to Redux store
       dispatch(addUpload(initialUpload));
 
       try {
-        // Start upload
         const response = await uploadService.uploadFile(
           file,
           uploadId,
           (progress) => {
-            // Dispatch progress updates to Redux
             dispatch(
               updateUploadProgress({
                 id: uploadId,
@@ -80,7 +74,6 @@ export const useUpload = () => {
           abortController.signal
         );
 
-        // Handle successful upload
         if (response.success && response.data) {
           dispatch(
             completeUpload({
@@ -94,10 +87,8 @@ export const useUpload = () => {
           throw new Error(response.error?.message || 'Upload failed');
         }
       } catch (error: any) {
-        // Handle upload failure
         const errorMessage = error?.message || 'Unknown error occurred';
 
-        // Don't mark as failed if it was cancelled
         if (errorMessage !== 'Upload cancelled') {
           dispatch(
             failUpload({
@@ -107,7 +98,6 @@ export const useUpload = () => {
           );
         }
       } finally {
-        // Clean up abort controller
         abortControllersRef.current.delete(uploadId);
       }
     },
@@ -116,27 +106,21 @@ export const useUpload = () => {
 
   const cancelUpload = useCallback(
     (uploadId: string) => {
-      // Abort the upload
       const abortController = abortControllersRef.current.get(uploadId);
       if (abortController) {
         abortController.abort();
         abortControllersRef.current.delete(uploadId);
       }
 
-      // Also cancel via upload service (backup)
       uploadService.cancelUpload(uploadId);
 
-      // Update Redux state
       dispatch(cancelUploadAction(uploadId));
     },
     [dispatch]
   );
-
+  //WIP
   const retryUpload = useCallback(
     async (uploadId: string) => {
-      // Note: We can't retry with the original File object from Redux
-      // This would need to be handled by re-selecting the file
-      // For now, this is a placeholder that would need implementation
       console.warn('Retry upload not implemented - file object not available in Redux state');
     },
     []
