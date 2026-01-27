@@ -16,6 +16,89 @@ import {
 } from '@/store/slices/uploadSlice';
 import { UploadItem } from './UploadItem';
 
+
+const styles = {
+  paper: {
+    position: 'fixed',
+    bottom: 24,
+    right: 24,
+    width: 420,
+    maxHeight: '65vh',
+    overflow: 'hidden',
+    zIndex: 1300,
+    borderRadius: 3,
+    border: '1px solid',
+    borderColor: 'divider',
+    bgcolor: 'background.default',
+    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)',
+  },
+  box: (hasActiveUploads: boolean) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    px: 2.5,
+    py: 2,
+    borderBottom: 1,
+    borderColor: 'divider',
+    cursor: 'pointer',
+    bgcolor: hasActiveUploads ? 'primary.main' : 'grey.800',
+    color: 'white',
+    transition: 'background-color 0.3s ease',
+    '&:hover': {
+      bgcolor: hasActiveUploads ? 'primary.dark' : 'grey.900',
+    },
+  }),
+  boxContent: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1.5,
+  },
+  boxIconButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1,
+  },
+  badge: {
+    '& .MuiBadge-badge': {
+      bgcolor: 'error.main',
+      color: 'white',
+      fontWeight: 'bold',
+    }
+  },
+  cloudIcon: { fontSize: 24 },
+  subtitle: { opacity: 0.9 },
+  clearButton: {
+    minWidth: 'auto',
+    px: 1.5,
+    color: 'white',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    '&:hover': {
+      borderColor: 'rgba(255, 255, 255, 0.5)',
+      bgcolor: 'rgba(255, 255, 255, 0.1)',
+    }
+  },
+  iconButton: { color: 'white' },
+  uploadList: {
+    maxHeight: '50vh',
+    overflowY: 'auto',
+    p: 2,
+    bgcolor: 'grey.50',
+    '&::-webkit-scrollbar': {
+      width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+      bgcolor: 'transparent',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      bgcolor: 'grey.400',
+      borderRadius: '4px',
+      '&:hover': {
+        bgcolor: 'grey.500',
+      },
+    },
+  },
+};
+
 export const UploadProgressPanel: React.FC = () => {
   const dispatch = useAppDispatch();
   const uploads = useAppSelector(selectUploadsArray);
@@ -23,11 +106,10 @@ export const UploadProgressPanel: React.FC = () => {
   const isMinimized = useAppSelector(selectIsMinimized);
   const activeUploadCount = useAppSelector(selectActiveUploadCount);
 
-  // Don't render if no uploads
+
   if (uploads.length === 0) {
     return null;
   }
-
   const handleToggleMinimize = () => {
     dispatch(togglePanelMinimized());
   };
@@ -39,66 +121,32 @@ export const UploadProgressPanel: React.FC = () => {
   return (
     <Paper
       elevation={8}
-      sx={{
-        position: 'fixed',
-        bottom: 24,
-        right: 24,
-        width: 420,
-        maxHeight: '65vh',
-        overflow: 'hidden',
-        zIndex: 1300,
-        borderRadius: 3,
-        border: '1px solid',
-        borderColor: 'divider',
-        bgcolor: 'background.default',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)',
-      }}
+      sx={styles.paper}
     >
       {/* Header */}
       <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          px: 2.5,
-          py: 2,
-          borderBottom: 1,
-          borderColor: 'divider',
-          cursor: 'pointer',
-          bgcolor: hasActiveUploads ? 'primary.main' : 'grey.800',
-          color: 'white',
-          transition: 'background-color 0.3s ease',
-          '&:hover': {
-            bgcolor: hasActiveUploads ? 'primary.dark' : 'grey.900',
-          },
-        }}
+        sx={styles.box(hasActiveUploads)}
         onClick={handleToggleMinimize}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Box sx={styles.boxContent}>
           <Badge
             badgeContent={activeUploadCount}
             color="error"
-            sx={{
-              '& .MuiBadge-badge': {
-                bgcolor: 'error.main',
-                color: 'white',
-                fontWeight: 'bold',
-              }
-            }}
+            sx={styles.badge}
           >
-            <CloudUploadIcon sx={{ fontSize: 24 }} />
+            <CloudUploadIcon sx={styles.cloudIcon} />
           </Badge>
           <Box>
             <Typography variant="subtitle1" component="div" fontWeight={600}>
               {hasActiveUploads ? 'Uploading Files' : 'Uploads'}
             </Typography>
-            <Typography variant="caption" sx={{ opacity: 0.9 }}>
+            <Typography variant="caption" sx={styles.subtitle}>
               {uploads.length} {uploads.length === 1 ? 'file' : 'files'}
             </Typography>
           </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={styles.boxIconButton}>
           {!isMinimized && (
             <Button
               size="small"
@@ -106,16 +154,7 @@ export const UploadProgressPanel: React.FC = () => {
                 e.stopPropagation();
                 handleClearCompleted();
               }}
-              sx={{
-                minWidth: 'auto',
-                px: 1.5,
-                color: 'white',
-                borderColor: 'rgba(255, 255, 255, 0.3)',
-                '&:hover': {
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
-                  bgcolor: 'rgba(255, 255, 255, 0.1)',
-                }
-              }}
+              sx={styles.clearButton}
               variant="outlined"
             >
               Clear
@@ -128,7 +167,7 @@ export const UploadProgressPanel: React.FC = () => {
               e.stopPropagation();
               handleToggleMinimize();
             }}
-            sx={{ color: 'white' }}
+            sx={styles.iconButton}
           >
             {isMinimized ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
@@ -138,25 +177,7 @@ export const UploadProgressPanel: React.FC = () => {
       {/* Upload Items */}
       {!isMinimized && (
         <Box
-          sx={{
-            maxHeight: '50vh',
-            overflowY: 'auto',
-            p: 2,
-            bgcolor: 'grey.50',
-            '&::-webkit-scrollbar': {
-              width: '8px',
-            },
-            '&::-webkit-scrollbar-track': {
-              bgcolor: 'transparent',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              bgcolor: 'grey.400',
-              borderRadius: '4px',
-              '&:hover': {
-                bgcolor: 'grey.500',
-              },
-            },
-          }}
+          sx={styles.uploadList}
         >
           {uploads.map((upload) => (
             <UploadItem key={upload.id} upload={upload} />

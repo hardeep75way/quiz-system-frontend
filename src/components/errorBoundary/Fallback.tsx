@@ -13,6 +13,9 @@ const styles = {
         backgroundColor: '#ffebee',
         color: '#b71c1c'
     },
+    h2: {
+        marginTop: 0
+    },
     details: {
         whiteSpace: 'pre-wrap',
         margin: '10px 0'
@@ -30,7 +33,7 @@ const styles = {
 export const Fallback: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) => {
     return (
         <div role="alert" style={styles.container}>
-            <h2 style={{ marginTop: 0 }}>Something went wrong.</h2>
+            <h2 style={styles.h2}>Something went wrong.</h2>
             <details style={styles.details}>
                 {error.message}
             </details>

@@ -27,6 +27,46 @@ import { setCredentials } from '@/store/slices/authSlice';
 import { AxiosError } from 'axios';
 import AuthBrandPanel from '@/components/auth/AuthBrandPanel';
 
+const styles = {
+    gridContainer: {
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: { xs: 2, sm: 4 },
+        backgroundColor: 'background.default',
+    },
+    paper: {
+        maxWidth: 460,
+        width: '100%',
+        p: { xs: 3, sm: 5 },
+        borderRadius: 3,
+        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+        border: 1,
+        borderColor: 'grey.200',
+    },
+    box: {
+        mb: 4,
+        textAlign: 'center',
+    },
+    boxTypography: {
+        mb: 2,
+    },
+    boxTextField: {
+        mb: 2,
+    },
+    boxButton: {
+        mb: 2,
+    },
+    boxLink: {
+        mb: 2,
+    },
+
+
+
+
+}
+
 export default function LoginPage() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -44,14 +84,11 @@ export default function LoginPage() {
     const loginMutation = useMutation({
         mutationFn: (data: LoginFormData) => authApi.login(data.email, data.password),
         onSuccess: async (tokenData) => {
-            // Save tokens to localStorage FIRST so API client can use them
+
             localStorage.setItem('accessToken', tokenData.access_token);
             localStorage.setItem('refreshToken', tokenData.refresh_token);
 
-            // Now fetch user data with the token in place
             const userResponse = await authApi.getCurrentUser();
-
-            // Update Redux state
             dispatch(setCredentials({
                 user: userResponse,
                 accessToken: tokenData.access_token,
@@ -84,29 +121,14 @@ export default function LoginPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5 }}
-                    sx={{
-                        minHeight: '100vh',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        p: { xs: 2, sm: 4 },
-                        backgroundColor: 'background.default',
-                    }}
+                    sx={styles.gridContainer}
                 >
                     <Paper
                         elevation={0}
-                        sx={{
-                            maxWidth: 460,
-                            width: '100%',
-                            p: { xs: 3, sm: 5 },
-                            borderRadius: 3,
-                            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                            border: 1,
-                            borderColor: 'grey.200',
-                        }}
+                        sx={styles.paper}
                     >
                         {/* Header */}
-                        <Box sx={{ mb: 4, textAlign: 'center' }}>
+                        <Box sx={styles.box}>
                             <Typography variant="h2" gutterBottom>
                                 Welcome Back
                             </Typography>
@@ -126,7 +148,7 @@ export default function LoginPage() {
                                 error={!!errors.email}
                                 helperText={errors.email?.message}
                                 {...register('email')}
-                                sx={{ mb: 2 }}
+                                sx={styles.boxTextField}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
@@ -144,7 +166,7 @@ export default function LoginPage() {
                                 error={!!errors.password}
                                 helperText={errors.password?.message}
                                 {...register('password')}
-                                sx={{ mb: 1 }}
+                                sx={styles.boxTextField}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
@@ -166,7 +188,7 @@ export default function LoginPage() {
                                 }}
                             />
 
-                            <Box sx={{ textAlign: 'right', mb: 3 }}>
+                            <Box sx={styles.boxLink}>
                                 <Link
                                     component={RouterLink}
                                     to="/forgot-password"
@@ -188,7 +210,7 @@ export default function LoginPage() {
                                 {loginMutation.isPending ? 'Signing in...' : 'Sign In'}
                             </Button>
 
-                            <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={styles.boxTypography}>
                                 <Typography variant="body2" color="text.secondary">
                                     Don't have an account?{' '}
                                     <Link component={RouterLink} to="/register" underline="hover" fontWeight={600}>

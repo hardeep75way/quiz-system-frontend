@@ -27,8 +27,60 @@ import { useState } from 'react';
 import { UploadProgressPanel } from '@/components/uploads/UploadProgressPanel';
 import React from 'react';
 
-const drawerWidth = 240;
+const styles = {
+    root: { display: 'flex' },
+    nav: { width: { sm: 240 }, flexShrink: { sm: 0 } },
+    main: {
+        flexGrow: 1,
+        p: 3,
+        width: { sm: `calc(100% - ${240}px)` },
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+    },
 
+    appBar: {
+        zIndex: (theme: any) => theme.zIndex.drawer + 1,
+        bgcolor: 'white',
+        color: 'text.primary',
+        borderBottom: 1,
+        borderColor: 'divider',
+        boxShadow: 'none',
+    },
+    menuButton: { mr: 2, display: { sm: 'none' } },
+    toolbarCenter: { justifyContent: 'center' },
+
+    brandText: { color: 'primary.main', fontWeight: 'bold' },
+    title: { flexGrow: 1, display: 'flex', alignItems: 'center' },
+    adminBadge: {
+        ml: 1,
+        color: 'primary.main',
+        fontWeight: 'bold',
+        border: 1,
+        px: 1,
+        borderRadius: 1,
+    },
+    userSection: { display: 'flex', alignItems: 'center', gap: 2 },
+    userInfo: { textAlign: 'right', display: { xs: 'none', sm: 'block' } },
+
+    mobileDrawer: {
+        display: { xs: 'block', sm: 'none' },
+        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
+    },
+    desktopDrawer: {
+        display: { xs: 'none', sm: 'block' },
+        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
+    },
+
+    buggyButton: {
+        position: 'fixed' as const,
+        bottom: 10,
+        left: 10,
+        zIndex: 9999,
+        color: 'red',
+        border: '1px solid black',
+        padding: '10px',
+    },
+};
 
 export default function Layout() {
     const location = useLocation();
@@ -63,8 +115,8 @@ export default function Layout() {
 
     const drawer = (
         <div>
-            <Toolbar sx={{ justifyContent: 'center' }}>
-                <Typography variant="h6" noWrap component="div" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+            <Toolbar sx={styles.toolbarCenter}>
+                <Typography variant="h6" noWrap component="div" sx={styles.brandText}>
                     Q System
                 </Typography>
             </Toolbar>
@@ -93,25 +145,25 @@ export default function Layout() {
     );
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={styles.root}>
             <CssBaseline />
-            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, bgcolor: 'white', color: 'text.primary', borderBottom: 1, borderColor: 'divider', boxShadow: 'none' }}>
+            <AppBar position="fixed" sx={styles.appBar}>
                 <Toolbar>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
                         edge="start"
                         onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' } }}
+                        sx={styles.menuButton}
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-                        Quiz System {isAdmin && <Typography component="span" variant="caption" sx={{ ml: 1, color: 'primary.main', fontWeight: 'bold', border: 1, px: 1, borderRadius: 1 }}>ADMIN</Typography>}
+                    <Typography variant="h6" noWrap component="div" sx={styles.title}>
+                        Quiz System {isAdmin && <Typography component="span" variant="caption" sx={styles.adminBadge}>ADMIN</Typography>}
                     </Typography>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <Box sx={{ textAlign: 'right', display: { xs: 'none', sm: 'block' } }}>
+                    <Box sx={styles.userSection}>
+                        <Box sx={styles.userInfo}>
                             <Typography variant="subtitle2">{user?.username || 'User'}</Typography>
                             <Typography variant="caption" color="text.secondary">{user?.email}</Typography>
                         </Box>
@@ -130,7 +182,7 @@ export default function Layout() {
 
             <Box
                 component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                sx={styles.nav}
             >
                 {/* Mobile Drawer */}
                 <Drawer
@@ -138,20 +190,14 @@ export default function Layout() {
                     open={mobileOpen}
                     onClose={handleDrawerToggle}
                     ModalProps={{ keepMounted: true }}
-                    sx={{
-                        display: { xs: 'block', sm: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                    }}
+                    sx={styles.mobileDrawer}
                 >
                     {drawer}
                 </Drawer>
                 {/* Desktop Drawer */}
                 <Drawer
                     variant="permanent"
-                    sx={{
-                        display: { xs: 'none', sm: 'block' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                    }}
+                    sx={styles.desktopDrawer}
                     open
                 >
                     {drawer}
@@ -161,7 +207,7 @@ export default function Layout() {
 
             <Box
                 component="main"
-                sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, minHeight: '100vh', bgcolor: 'background.default' }}
+                sx={styles.main}
             >
                 <Toolbar />
                 <Outlet />
@@ -180,7 +226,7 @@ const BuggyButton = () => {
         throw new Error('Test Crash!');
     }
     return (
-        <button onClick={() => setHasError(true)} style={{ position: 'fixed', bottom: 10, left: 10, zIndex: 9999, color: 'red', border: '1px solid black', padding: '10px' }}>
+        <button onClick={() => setHasError(true)} style={styles.buggyButton}>
             Trigger Error
         </button>
     );
