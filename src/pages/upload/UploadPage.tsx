@@ -8,27 +8,68 @@ import {
     Grid,
     Card,
     CardContent,
-    Divider,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
     Alert,
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import ImageIcon from '@mui/icons-material/Image';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import DescriptionIcon from '@mui/icons-material/Description';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { useUpload } from '@/features/uploads/hooks/useUpload';
+import { useUpload } from '@/hooks/useUpload';
 import { useAppSelector } from '@/store/hooks';
 import {
     selectUploadsArray,
     selectActiveUploadCount,
     selectCompletedUploads,
-} from '@/features/uploads/hooks/useUploadSelector';
-import { validateUploadFile } from '@/features/uploads/services/uploadValidator';
+} from '@/hooks/useUploadSelector';
+import { validateUploadFile } from '@/lib/uploadValidator';
+
+
+
+const styles = {
+    hiddenInput: { display: 'none' },
+    container: { py: 4 },
+    header: { mb: 4 },
+    statCard: (borderColor: string) => ({
+        borderLeft: 4,
+        borderColor: borderColor,
+        transition: 'transform 0.2s',
+        '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: 4,
+        },
+    }),
+    alert: { mb: 3 },
+    dropZone: (isDragging: boolean) => ({
+        p: 6,
+        textAlign: 'center' as const,
+        border: 3,
+        borderStyle: 'dashed',
+        borderColor: isDragging ? 'primary.main' : 'grey.300',
+        bgcolor: isDragging ? 'primary.50' : 'background.paper',
+        borderRadius: 3,
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        mb: 4,
+        '&:hover': {
+            borderColor: 'primary.main',
+            bgcolor: 'primary.50',
+            transform: 'scale(1.01)',
+        },
+    }),
+    uploadIcon: (isDragging: boolean) => ({
+        fontSize: 80,
+        color: isDragging ? 'primary.main' : 'grey.400',
+        mb: 2,
+        transition: 'color 0.3s ease',
+    }),
+    browseText: { mb: 3 },
+    browseButton: {
+        px: 4,
+        py: 1.5,
+        borderRadius: 2,
+        textTransform: 'none' as const,
+        fontSize: '1rem',
+        fontWeight: 600,
+    },
+};
 
 export const UploadPage: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -108,10 +149,31 @@ export const UploadPage: React.FC = () => {
         fileInputRef.current?.click();
     };
 
+    const statCards = [
+        {
+            label: 'Total Uploads',
+            value: uploads.length,
+            color: 'primary.main',
+            borderColor: 'primary.main',
+        },
+        {
+            label: 'Active Uploads',
+            value: activeUploadCount,
+            color: 'warning.main',
+            borderColor: 'warning.main',
+        },
+        {
+            label: 'Completed',
+            value: completedUploads.length,
+            color: 'success.main',
+            borderColor: 'success.main',
+        },
+    ];
+
     return (
-        <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Container maxWidth="lg" sx={styles.container}>
             {/* Header */}
-            <Box sx={{ mb: 4 }}>
+            <Box sx={styles.header}>
                 <Typography variant="h4" fontWeight={700} gutterBottom>
                     Upload Files
                 </Typography>
@@ -121,86 +183,31 @@ export const UploadPage: React.FC = () => {
             </Box>
 
             {/* Stats Cards */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card
-                        elevation={2}
-                        sx={{
-                            borderLeft: 4,
-                            borderColor: 'primary.main',
-                            transition: 'transform 0.2s',
-                            '&:hover': {
-                                transform: 'translateY(-4px)',
-                                boxShadow: 4,
-                            }
-                        }}
-                    >
-                        <CardContent>
-                            <Typography variant="h3" color="primary" fontWeight={700}>
-                                {uploads.length}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Total Uploads
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
 
-                <Grid item xs={12} sm={6} md={4}>
+            {statCards.map((stat) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={stat.label}>
                     <Card
                         elevation={2}
-                        sx={{
-                            borderLeft: 4,
-                            borderColor: 'warning.main',
-                            transition: 'transform 0.2s',
-                            '&:hover': {
-                                transform: 'translateY(-4px)',
-                                boxShadow: 4,
-                            }
-                        }}
+                        sx={styles.statCard(stat.borderColor)}
                     >
                         <CardContent>
-                            <Typography variant="h3" color="warning.main" fontWeight={700}>
-                                {activeUploadCount}
+                            <Typography variant="h3" color={stat.color} fontWeight={700}>
+                                {stat.value}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                Active Uploads
+                                {stat.label}
                             </Typography>
                         </CardContent>
                     </Card>
                 </Grid>
-
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card
-                        elevation={2}
-                        sx={{
-                            borderLeft: 4,
-                            borderColor: 'success.main',
-                            transition: 'transform 0.2s',
-                            '&:hover': {
-                                transform: 'translateY(-4px)',
-                                boxShadow: 4,
-                            }
-                        }}
-                    >
-                        <CardContent>
-                            <Typography variant="h3" color="success.main" fontWeight={700}>
-                                {completedUploads.length}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Completed
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
+            ))}
 
             {/* Error Alert */}
             {validationError && (
                 <Alert
                     severity="error"
                     onClose={() => setValidationError(null)}
-                    sx={{ mb: 3 }}
+                    sx={styles.alert}
                 >
                     {validationError}
                 </Alert>
@@ -213,39 +220,18 @@ export const UploadPage: React.FC = () => {
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                sx={{
-                    p: 6,
-                    textAlign: 'center',
-                    border: 3,
-                    borderStyle: 'dashed',
-                    borderColor: isDragging ? 'primary.main' : 'grey.300',
-                    bgcolor: isDragging ? 'primary.50' : 'background.paper',
-                    borderRadius: 3,
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    mb: 4,
-                    '&:hover': {
-                        borderColor: 'primary.main',
-                        bgcolor: 'primary.50',
-                        transform: 'scale(1.01)',
-                    },
-                }}
+                sx={styles.dropZone(isDragging)}
                 onClick={handleBrowseClick}
             >
                 <CloudUploadIcon
-                    sx={{
-                        fontSize: 80,
-                        color: isDragging ? 'primary.main' : 'grey.400',
-                        mb: 2,
-                        transition: 'color 0.3s ease',
-                    }}
+                    sx={styles.uploadIcon(isDragging)}
                 />
 
                 <Typography variant="h5" fontWeight={600} gutterBottom>
                     {isDragging ? 'Drop files here' : 'Drag & drop files here'}
                 </Typography>
 
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                <Typography variant="body1" color="text.secondary" sx={styles.browseText}>
                     or click to browse from your computer
                 </Typography>
 
@@ -254,14 +240,7 @@ export const UploadPage: React.FC = () => {
                     size="large"
                     startIcon={<FolderOpenIcon />}
                     onClick={handleBrowseClick}
-                    sx={{
-                        px: 4,
-                        py: 1.5,
-                        borderRadius: 2,
-                        textTransform: 'none',
-                        fontSize: '1rem',
-                        fontWeight: 600,
-                    }}
+                    sx={styles.browseButton}
                 >
                     Browse Files
                 </Button>
@@ -271,12 +250,12 @@ export const UploadPage: React.FC = () => {
                     type="file"
                     multiple
                     onChange={handleFileSelect}
-                    style={{ display: 'none' }}
+                    style={styles.hiddenInput}
                     accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.webp,.txt,.csv,.mp4,.avi,.mov,.webm,.ogg"
                 />
             </Paper>
 
-            
+
         </Container>
     );
 };

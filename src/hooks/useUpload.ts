@@ -8,8 +8,8 @@ import {
   failUpload,
   cancelUpload as cancelUploadAction,
 } from '@/store/slices/uploadSlice';
-import { uploadService } from '../services/uploadService';
-import { validateUploadFile } from '../services/uploadValidator';
+import { uploadService } from '@/api/upload';
+import { validateUploadFile } from '@/lib/uploadValidator';
 import { UploadStatus, SerializableUploadFile } from '@/types/upload';
 
 export const useUpload = () => {
@@ -86,8 +86,14 @@ export const useUpload = () => {
         } else {
           throw new Error(response.error?.message || 'Upload failed');
         }
-      } catch (error: any) {
-        const errorMessage = error?.message || 'Unknown error occurred';
+      } catch (error: unknown) {
+        let errorMessage = 'Unknown error occurred';
+
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === 'string') {
+          errorMessage = error;
+        }
 
         if (errorMessage !== 'Upload cancelled') {
           dispatch(
@@ -120,7 +126,7 @@ export const useUpload = () => {
   );
   //WIP
   const retryUpload = useCallback(
-    async (uploadId: string) => {
+    async (_uploadId: string) => {
       console.warn('Retry upload not implemented - file object not available in Redux state');
     },
     []

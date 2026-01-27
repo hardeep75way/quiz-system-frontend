@@ -73,12 +73,12 @@ export default function LoginPage() {
     return (
         <Grid container sx={{ minHeight: '100vh' }}>
             {/* Left Panel - Brand */}
-            <Grid item xs={false} md={5}>
+            <Grid size={{ xs: false, md: 5 }}>
                 <AuthBrandPanel />
             </Grid>
 
             {/* Right Panel - Form */}
-            <Grid item xs={12} md={7}>
+            <Grid size={{ xs: 12, md: 7 }}>
                 <Box
                     component={motion.div}
                     initial={{ opacity: 0, x: 20 }}

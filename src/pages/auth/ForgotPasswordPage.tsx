@@ -8,6 +8,36 @@ import { authApi } from '@/api/auth';
 import { forgotPasswordSchema, type ForgotPasswordFormData } from '@/lib/validators';
 import { AxiosError } from 'axios';
 
+const styles = {
+    container: {
+        marginTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    paper: {
+        p: 4,
+        width: '100%',
+    },
+    form: {
+        mt: 1,
+    },
+    textField: {
+        mt: 1,
+    },
+    button: {
+        mt: 3,
+        mb: 2,
+    },
+    link: {
+        textDecoration: 'none',
+    },
+    linkTypography: {
+        variant: 'body2',
+        color: 'primary',
+    },
+}
+
 export default function ForgotPassword() {
     const { enqueueSnackbar } = useSnackbar();
 
@@ -44,14 +74,9 @@ export default function ForgotPassword() {
     return (
         <Container component="main" maxWidth="xs">
             <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
+                sx={styles.container}
             >
-                <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
+                <Paper elevation={3} sx={styles.paper}>
                     <Typography component="h1" variant="h5" align="center" gutterBottom>
                         Forgot Password
                     </Typography>
@@ -59,7 +84,7 @@ export default function ForgotPassword() {
                         Enter your email address and we'll send you a link to reset your password.
                     </Typography>
 
-                    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={styles.form}>
                         <TextField
                             margin="normal"
                             required
@@ -78,16 +103,14 @@ export default function ForgotPassword() {
                             fullWidth
                             variant="contained"
                             disabled={forgotPasswordMutation.isPending}
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={styles.button}
                         >
                             {forgotPasswordMutation.isPending ? 'Sending...' : 'Send Reset Link'}
                         </Button>
 
-                        <Box sx={{ textAlign: 'center' }}>
-                            <Link to="/login" style={{ textDecoration: 'none' }}>
-                                <Typography variant="body2" color="primary">
-                                    Back to Login
-                                </Typography>
+                        <Box sx={styles.linkTypography}>
+                            <Link to="/login" style={styles.link}>
+                                Back to Login
                             </Link>
                         </Box>
                     </Box>

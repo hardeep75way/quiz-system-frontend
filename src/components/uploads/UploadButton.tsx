@@ -1,8 +1,12 @@
 import React, { useRef } from 'react';
 import { Button } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
-import { useUpload } from '../hooks/useUpload';
+import { useUpload } from '@/hooks/useUpload';
 import { Navigate } from 'react-router-dom';
+
+const styles = {
+  hiddenInput: { display: 'none' },
+};
 
 export const UploadButton: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -41,7 +45,7 @@ export const UploadButton: React.FC = () => {
         ref={fileInputRef}
         type="file"
         multiple
-        style={{ display: 'none' }}
+        style={styles.hiddenInput}
         onChange={handleFileChange}
         accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.webp,.txt,.csv,.mp4,.avi,.mov,.webm,.ogg"
       />

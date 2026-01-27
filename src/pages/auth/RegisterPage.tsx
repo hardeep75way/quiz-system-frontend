@@ -77,15 +77,19 @@ export default function RegisterPage() {
         return 'success';
     };
 
+    const fields = [
+        { name: 'email', label: 'Email Address', type: 'email', icon: <EmailIcon color="action" /> },
+        { name: 'username', label: 'Username', type: 'text', icon: <PersonIcon color="action" /> },
+    ];
     return (
         <Grid container sx={{ minHeight: '100vh' }}>
             {/* Left Panel - Brand */}
-            <Grid item xs={false} md={5}>
+            <Grid size={{ xs: false, md: 5 }}>
                 <AuthBrandPanel />
             </Grid>
 
             {/* Right Panel - Form */}
-            <Grid item xs={12} md={7}>
+            <Grid size={{ xs: 12, md: 7 }}>
                 <Box
                     component={motion.div}
                     initial={{ opacity: 0, x: 20 }}
@@ -124,42 +128,27 @@ export default function RegisterPage() {
 
                         {/* Form */}
                         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-                            <TextField
-                                fullWidth
-                                label="Email Address"
-                                type="email"
-                                autoComplete="email"
-                                autoFocus
-                                error={!!errors.email}
-                                helperText={errors.email?.message}
-                                {...register('email')}
-                                sx={{ mb: 2 }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <EmailIcon color="action" />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-
-                            <TextField
-                                fullWidth
-                                label="Username"
-                                type="text"
-                                autoComplete="username"
-                                error={!!errors.username}
-                                helperText={errors.username?.message}
-                                {...register('username')}
-                                sx={{ mb: 2 }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <PersonIcon color="action" />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
+                            {fields.map((field) => (
+                                <TextField
+                                    key={field.name}
+                                    fullWidth
+                                    label={field.label}
+                                    type={field.type}
+                                    autoComplete={field.name}
+                                    autoFocus={field.name === 'email'}
+                                    error={!!errors[field.name as keyof RegisterFormData]}
+                                    helperText={errors[field.name as keyof RegisterFormData]?.message}
+                                    {...register(field.name as keyof RegisterFormData)}
+                                    sx={{ mb: 2 }}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                {field.icon}
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            ))}
 
                             <TextField
                                 fullWidth

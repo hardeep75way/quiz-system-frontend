@@ -9,6 +9,36 @@ import { resetPasswordSchema, type ResetPasswordFormData } from '@/lib/validator
 import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
+const styles = {
+    container: {
+        marginTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    paper: {
+        p: 4,
+        width: '100%',
+    },
+    form: {
+        mt: 1,
+    },
+    textField: {
+        mt: 1,
+    },
+    button: {
+        mt: 3,
+        mb: 2,
+    },
+    link: {
+        textDecoration: 'none',
+    },
+    linkTypography: {
+        variant: 'body2',
+        color: 'primary',
+    },
+}
+
 export default function ResetPassword() {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
@@ -48,14 +78,9 @@ export default function ResetPassword() {
     return (
         <Container component="main" maxWidth="xs">
             <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
+                sx={styles.container}
             >
-                <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
+                <Paper elevation={3} sx={styles.paper}>
                     <Typography component="h1" variant="h5" align="center" gutterBottom>
                         Reset Password
                     </Typography>
@@ -63,7 +88,7 @@ export default function ResetPassword() {
                         Enter your new password below.
                     </Typography>
 
-                    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={styles.form}>
                         <TextField
                             margin="normal"
                             required
@@ -96,13 +121,13 @@ export default function ResetPassword() {
                             fullWidth
                             variant="contained"
                             disabled={resetPasswordMutation.isPending}
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={styles.button}
                         >
                             {resetPasswordMutation.isPending ? 'Resetting...' : 'Reset Password'}
                         </Button>
 
-                        <Box sx={{ textAlign: 'center' }}>
-                            <Link to="/login" style={{ textDecoration: 'none' }}>
+                        <Box sx={styles.linkTypography}>
+                            <Link to="/login" style={styles.link}>
                                 <Typography variant="body2" color="primary">
                                     Back to Login
                                 </Typography>

@@ -9,7 +9,7 @@ import {
   selectHasActiveUploads,
   selectIsMinimized,
   selectActiveUploadCount,
-} from '../hooks/useUploadSelector';
+} from '@/hooks/useUploadSelector';
 import {
   togglePanelMinimized,
   clearCompletedUploads,

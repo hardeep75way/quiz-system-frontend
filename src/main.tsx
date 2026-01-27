@@ -16,6 +16,7 @@ import { store } from './store';
 import { router } from './routes';
 import { theme } from './theme/theme';
 import './index.css';
+import { ErrorBoundary } from './components/errorBoundary';
 
 
 const queryClient = new QueryClient();
@@ -23,15 +24,17 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')!).render(
 
   <React.StrictMode>
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-            <RouterProvider router={router} />
-          </SnackbarProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+              <RouterProvider router={router} />
+            </SnackbarProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </Provider>
+    </ErrorBoundary>
   </React.StrictMode>
 );

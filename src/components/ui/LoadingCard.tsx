@@ -60,7 +60,7 @@ export default function LoadingCard({ variant = 'quiz', count = 1 }: LoadingCard
         return (
             <Grid container spacing={3}>
                 {Array.from({ length: count }).map((_, index) => (
-                    <Grid item xs={12} sm={6} lg={3} key={index}>
+                    <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={index}>
                         {renderSkeleton()}
                     </Grid>
                 ))}
@@ -72,7 +72,7 @@ export default function LoadingCard({ variant = 'quiz', count = 1 }: LoadingCard
         return (
             <Grid container spacing={3}>
                 {Array.from({ length: count }).map((_, index) => (
-                    <Grid item xs={12} sm={6} lg={3} key={index}>
+                    <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={index}>
                         {renderSkeleton()}
                     </Grid>
                 ))}

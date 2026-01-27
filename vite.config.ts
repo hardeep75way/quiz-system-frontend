@@ -10,12 +10,10 @@ export default defineConfig({
     svgr({
       // svgr options: https://react-svgr.com/docs/options/
       svgrOptions: {
-        exportType: 'named',
         ref: true,
         svgo: false,
         titleProp: true,
       },
-      include: '**/*.svg',
     }),
   ],
   resolve: {

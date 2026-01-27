@@ -1,15 +1,16 @@
 import React from 'react';
-import { Box, Typography, IconButton, LinearProgress, Chip, Paper } from '@mui/material';
-import CancelIcon from '@mui/icons-material/Cancel';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Typography, Chip, Paper } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useAppDispatch } from '@/store/hooks';
 import { removeUpload } from '@/store/slices/uploadSlice';
-import { useUpload } from '../hooks/useUpload';
+import { useUpload } from '@/hooks/useUpload';
 import { SerializableUploadFile, UploadStatus } from '@/types/upload';
-import { formatFileSize, getFileIcon } from '../services/uploadValidator';
+import { formatFileSize, getFileIcon } from '@/lib/uploadValidator';
+import { UploadProgress } from './UploadProgress';
+import { UploadError } from './UploadError';
+import { UploadActions } from './UploadActions';
 
 interface UploadItemProps {
   upload: SerializableUploadFile;
@@ -139,87 +140,25 @@ export const UploadItem: React.FC<UploadItemProps> = ({ upload }) => {
 
         {/* Progress Bar */}
         {upload.status === UploadStatus.UPLOADING && (
-          <Box sx={{ mt: 1 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-              <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                {upload.progress}%
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {formatFileSize(upload.uploadedBytes)} / {formatFileSize(upload.totalBytes)}
-              </Typography>
-            </Box>
-            <LinearProgress
-              variant="determinate"
-              value={upload.progress}
-              sx={{
-                height: 6,
-                borderRadius: 3,
-                bgcolor: 'grey.200',
-                '& .MuiLinearProgress-bar': {
-                  borderRadius: 3,
-                  background: 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
-                }
-              }}
-            />
-          </Box>
+          <UploadProgress
+            progress={upload.progress}
+            uploadedBytes={upload.uploadedBytes}
+            totalBytes={upload.totalBytes}
+          />
         )}
 
         {/* Error Message */}
         {upload.status === UploadStatus.FAILED && upload.error && (
-          <Box
-            sx={{
-              mt: 1,
-              p: 1,
-              bgcolor: 'error.100',
-              borderRadius: 1,
-              border: 1,
-              borderColor: 'error.200',
-            }}
-          >
-            <Typography variant="caption" color="error.dark" fontWeight={500}>
-              ⚠️ {upload.error}
-            </Typography>
-          </Box>
+          <UploadError error={upload.error} />
         )}
       </Box>
 
       {/* Actions */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-        {upload.status === UploadStatus.UPLOADING && (
-          <IconButton
-            size="small"
-            onClick={handleCancel}
-            color="error"
-            title="Cancel upload"
-            sx={{
-              bgcolor: 'error.100',
-              '&:hover': {
-                bgcolor: 'error.200',
-              }
-            }}
-          >
-            <CancelIcon fontSize="small" />
-          </IconButton>
-        )}
-
-        {(upload.status === UploadStatus.COMPLETED ||
-          upload.status === UploadStatus.FAILED ||
-          upload.status === UploadStatus.CANCELLED) && (
-            <IconButton
-              size="small"
-              onClick={handleRemove}
-              title="Remove from list"
-              sx={{
-                bgcolor: 'grey.200',
-                '&:hover': {
-                  bgcolor: 'grey.300',
-                }
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          )}
-      </Box>
+      <UploadActions
+        status={upload.status}
+        onCancel={handleCancel}
+        onRemove={handleRemove}
+      />
     </Paper>
   );
 };

@@ -24,7 +24,8 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
-import { UploadProgressPanel } from '@/features/uploads/components';
+import { UploadProgressPanel } from '@/components/uploads/UploadProgressPanel';
+import React from 'react';
 
 const drawerWidth = 240;
 
@@ -156,17 +157,31 @@ export default function Layout() {
                     {drawer}
                 </Drawer>
             </Box>
+            <BuggyButton />
 
             <Box
                 component="main"
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, minHeight: '100vh', bgcolor: 'background.default' }}
             >
-                <Toolbar /> {/* Spacer for fixed AppBar */}
+                <Toolbar /> 
                 <Outlet />
             </Box>
 
-            {/* Global Upload Progress Panel */}
+            
             <UploadProgressPanel />
         </Box>
     );
 }
+
+const BuggyButton = () => {
+    const [hasError, setHasError] = React.useState(false);
+
+    if (hasError) {
+        throw new Error('Test Crash!');
+    }
+    return (
+        <button onClick={() => setHasError(true)} style={{ position: 'fixed', bottom: 10, right: 10, zIndex: 9999 }}>
+            Trigger Error
+        </button>
+    );
+};
