@@ -163,11 +163,11 @@ export default function Layout() {
                 component="main"
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, minHeight: '100vh', bgcolor: 'background.default' }}
             >
-                <Toolbar /> 
+                <Toolbar />
                 <Outlet />
             </Box>
 
-            
+
             <UploadProgressPanel />
         </Box>
     );
@@ -180,7 +180,7 @@ const BuggyButton = () => {
         throw new Error('Test Crash!');
     }
     return (
-        <button onClick={() => setHasError(true)} style={{ position: 'fixed', bottom: 10, right: 10, zIndex: 9999 }}>
+        <button onClick={() => setHasError(true)} style={{ position: 'fixed', bottom: 10, left: 10, zIndex: 9999, color: 'red', border: '1px solid black', padding: '10px' }}>
             Trigger Error
         </button>
     );
